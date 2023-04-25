@@ -7,10 +7,6 @@
 %define		qtver		5.15.2
 %define		kaname		kdev-python
 
-%ifarch x32
-%undefine with_webengine
-%endif
-
 Summary:	KDE Integrated Development Environment - python
 Summary(pl.UTF-8):	Zintegrowane środowisko programisty dla KDE - python
 Name:		ka5-%{kaname}
