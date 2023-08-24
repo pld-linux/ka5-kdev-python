@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	tests		# build with tests
 
-%define		kdeappsver	23.04.3
+%define		kdeappsver	23.08.0
 %define		kframever	5.103.0
 %define		qtver		5.15.2
 %define		kaname		kdev-python
@@ -10,19 +10,19 @@
 Summary:	KDE Integrated Development Environment - python
 Summary(pl.UTF-8):	Zintegrowane środowisko programisty dla KDE - python
 Name:		ka5-%{kaname}
-Version:	23.04.3
+Version:	23.08.0
 Release:	1
 License:	GPL
 Group:		X11/Development/Tools
 Source0:	https://download.kde.org/stable/release-service/%{kdeappsver}/src/%{kaname}-%{version}.tar.xz
-# Source0-md5:	1c0eb8abd58ef33b7f858d4e09976ee4
+# Source0-md5:	658e53d1c063aebe0347f0083a9c5c3f
 URL:		http://www.kdevelop.org/
 BuildRequires:	Qt5Core-devel >= 5.15.2
 BuildRequires:	Qt5Gui-devel >= 5.15.2
 BuildRequires:	Qt5Test-devel
 BuildRequires:	Qt5Widgets-devel >= 5.15.2
 BuildRequires:	gettext-devel
-BuildRequires:	ka5-kdevelop-devel >= 5.7
+BuildRequires:	ka5-kdevelop-devel >= %{kdeappsver}
 BuildRequires:	kf5-extra-cmake-modules >= 5.78.0
 BuildRequires:	kf5-kauth-devel >= 5.105.0
 BuildRequires:	kf5-kcodecs-devel >= 5.105.0
@@ -56,19 +56,17 @@ KDE Integrated Development Environment - python.
 %setup -q -n %{kaname}-%{version}
 
 %build
-install -d build
-cd build
 %cmake \
+	-B build \
 	-G Ninja \
 	%{!?with_tests:-DBUILD_TESTING=OFF} \
 	-DHTML_INSTALL_DIR=%{_kdedocdir} \
 	-DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-	-DFORCE_BASH_COMPLETION_INSTALLATION=ON \
-	..
-%ninja_build
+	-DFORCE_BASH_COMPLETION_INSTALLATION=ON
+%ninja_build -C build
 
 %if %{with tests}
-ctest
+ctest --test-dir build
 %endif
 
 %install
@@ -85,8 +83,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkdevpythoncompletion.so
 %attr(755,root,root) %{_libdir}/libkdevpythonduchain.so
 %attr(755,root,root) %{_libdir}/libkdevpythonparser.so
-%attr(755,root,root) %{_libdir}/qt5/plugins/kdevplatform/511/kdevpdb.so
-%attr(755,root,root) %{_libdir}/qt5/plugins/kdevplatform/511/kdevpythonlanguagesupport.so
+%attr(755,root,root) %{_libdir}/qt5/plugins/kdevplatform/51?/kdevpdb.so
+%attr(755,root,root) %{_libdir}/qt5/plugins/kdevplatform/51?/kdevpythonlanguagesupport.so
 %{_datadir}/kdevappwizard/templates/django_project.tar.bz2
 %{_datadir}/kdevappwizard/templates/qtdesigner_app.tar.bz2
 %{_datadir}/kdevappwizard/templates/simple_pythonapp.tar.bz2
